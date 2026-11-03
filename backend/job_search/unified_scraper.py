@@ -32,46 +32,67 @@ def search_all_portals(
     include_internshala: bool = True,
     naukri_pages: int = 2,
     internshala_pages: int = 2,
+    experience: str | int | None = None,
 ) -> list[dict[str, Any]]:
+    """
+    Search across job portals dynamically for ANY tech stack, location, and experience.
+    """
     all_jobs: list[dict[str, Any]] = []
 
     for role in roles:
-        for city in cities:
-            location = city if city.lower().endswith("india") else f"{city}, India"
+        clean_role = role.strip()
+        if not clean_role:
+            continue
 
-            print(f"[Scraper] Fetching jobs for {role} in {location}")
+        for city in cities:
+            clean_city = city.strip()
+            if not clean_city:
+                continue
+
+            print(f"[Scraper] Fetching jobs for '{clean_role}' in '{clean_city}' (Exp: {experience or 'Any'})")
+
+            # 1. JobSpy (Indeed & LinkedIn)
             try:
                 source_jobs = fetch_jobs(
-                    role=role,
-                    locations=[location],
+                    role=clean_role,
+                    locations=[clean_city],
                     site_names=["indeed", "linkedin"],
                     results_wanted=20,
-                    hours_old=72,
+                    hours_old=120,
                 )
                 print(f"[Scraper] Found {len(source_jobs)} jobs from JobSpy")
                 all_jobs.extend(source_jobs)
             except Exception as exc:
-                print(f"[Scraper] JobSpy error for {role} in {location}: {exc}")
+                print(f"[Scraper] JobSpy error for {clean_role} in {clean_city}: {exc}")
 
+            # 2. Naukri (Selenium Stealth)
             if include_naukri:
-                print(f"[Scraper] Fetching Naukri jobs for {role} in {city}")
+                print(f"[Scraper] Fetching Naukri jobs for {clean_role} in {clean_city}")
                 try:
-                    naukri_jobs = scrape_naukri(role=role, location=city, pages=naukri_pages)
+                    naukri_jobs = scrape_naukri(
+                        role=clean_role,
+                        location=clean_city,
+                        pages=naukri_pages,
+                        experience=experience,
+                    )
                     print(f"[Scraper] Found {len(naukri_jobs)} jobs from Naukri")
                     all_jobs.extend(naukri_jobs)
                 except Exception as exc:
-                    print(f"[Scraper] Naukri error for {role} in {city}: {exc}")
+                    print(f"[Scraper] Naukri error for {clean_role} in {clean_city}: {exc}")
 
+            # 3. Internshala (BS4 & JSON-LD)
             if include_internshala:
-                print(f"[Scraper] Fetching Internshala jobs for {role} in {city}")
+                print(f"[Scraper] Fetching Internshala jobs for {clean_role} in {clean_city}")
                 try:
                     internshala_jobs = scrape_internshala(
-                        role=role, location=city, pages=internshala_pages
+                        role=clean_role,
+                        location=clean_city,
+                        pages=internshala_pages,
                     )
                     print(f"[Scraper] Found {len(internshala_jobs)} jobs from Internshala")
                     all_jobs.extend(internshala_jobs)
                 except Exception as exc:
-                    print(f"[Scraper] Internshala error for {role} in {city}: {exc}")
+                    print(f"[Scraper] Internshala error for {clean_role} in {clean_city}: {exc}")
 
     print(f"[Scraper] Total jobs found before deduplication: {len(all_jobs)}")
     unique_jobs = _dedupe_jobs(all_jobs)

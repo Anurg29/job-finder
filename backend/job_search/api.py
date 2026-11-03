@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from job_search.groq_formatter import format_jobs_with_groq
+from job_search.ai_pipeline import pipeline, format_jobs_with_pipeline
 from job_search.unified_scraper import search_all_portals
 from job_search.auth import (
     hash_password,
@@ -23,18 +23,22 @@ FRONTEND_DIR = PACKAGE_DIR / "frontend"
 
 
 class SearchRequest(BaseModel):
-    query: str = "Python fresher jobs in Hyderabad"
+    query: str = Field(default="Software Engineer jobs in Mumbai", description="Custom search query")
     roles: list[str] = Field(
-        default_factory=lambda: ["Python Developer", "AI ML Engineer"]
+        default_factory=lambda: ["Software Engineer"]
     )
     cities: list[str] = Field(
-        default_factory=lambda: ["Hyderabad", "Pune", "Mumbai", "Bangalore"]
+        default_factory=lambda: ["Mumbai"]
+    )
+    experience: str = Field(
+        default="Any",
+        description="Experience level (e.g. Fresher, 1-3 years, Senior, Any)"
     )
     include_naukri: bool = True
     include_internshala: bool = True
     naukri_pages: int = Field(default=1, ge=1, le=5)
     internshala_pages: int = Field(default=1, ge=1, le=5)
-    max_results: int = Field(default=120, ge=10, le=500)
+    max_results: int = Field(default=20, ge=1, le=500)
 
 
 class SearchResponse(BaseModel):
@@ -98,6 +102,12 @@ def service_worker() -> FileResponse:
 @app.get("/api/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/ai/diagnostics")
+def ai_diagnostics() -> dict[str, Any]:
+    """Inspect status of Gemini, Groq, and active AI pipeline providers."""
+    return pipeline.test_providers()
 
 
 @app.post("/api/auth/register", response_model=AuthResponse)
@@ -181,7 +191,7 @@ def search_jobs(payload: SearchRequest) -> SearchResponse:
         raise HTTPException(status_code=400, detail="At least one city is required.")
 
     try:
-        print(f"[API] Starting search for roles={roles}, cities={cities}")
+        print(f"[API] Starting search for roles={roles}, cities={cities}, exp={payload.experience}")
         all_jobs = search_all_portals(
             roles=roles,
             cities=cities,
@@ -189,6 +199,7 @@ def search_jobs(payload: SearchRequest) -> SearchResponse:
             include_internshala=payload.include_internshala,
             naukri_pages=payload.naukri_pages,
             internshala_pages=payload.internshala_pages,
+            experience=payload.experience,
         )
         print(f"[API] Search completed. Found {len(all_jobs)} jobs")
     except Exception as exc:
@@ -199,9 +210,10 @@ def search_jobs(payload: SearchRequest) -> SearchResponse:
 
     try:
         limited_jobs = all_jobs[: payload.max_results]
-        print(f"[API] Formatting {len(limited_jobs)} jobs with Groq")
-        summary = format_jobs_with_groq(limited_jobs, payload.query)
-        print(f"[API] Formatting complete")
+        print(f"[API] Running AI pipeline formatting for {len(limited_jobs)} jobs")
+        result = pipeline.process(limited_jobs, payload.query)
+        summary = result.summary
+        print(f"[API] AI Formatting complete using provider: {result.provider}")
     except Exception as exc:
         print(f"[API] Formatting failed with error: {exc}")
         import traceback

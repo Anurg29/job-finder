@@ -824,40 +824,46 @@
       <div class="panel-grid">
         <div>
           <div class="form-group">
-            <label class="form-label" for="searchQuery">Search Query</label>
+            <label class="form-label" for="searchQuery">Search Query (Natural Language or Specific)</label>
             <div class="input-wrap">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <input class="form-input" id="searchQuery" type="text" value="Python fresher jobs in Hyderabad">
+              <input class="form-input" id="searchQuery" type="text" value="Software Engineer jobs in Mumbai" placeholder="e.g. React Developer in Mumbai or Python in London">
             </div>
-            <!-- Quick Chips -->
+            <!-- Dynamic Chips -->
             <div class="preset-chips">
-              <span class="chip" data-query="Python fresher jobs in Hyderabad" data-roles="Python Developer" data-cities="Hyderabad">Python Hyderabad</span>
-              <span class="chip" data-query="AI ML Engineer fresher Pune" data-roles="AI ML Engineer, Data Scientist" data-cities="Pune">AI / ML Pune</span>
-              <span class="chip" data-query="React Frontend Developer Bangalore" data-roles="Frontend Developer, React Developer" data-cities="Bangalore">React Bangalore</span>
-              <span class="chip" data-query="Java Developer fresher Mumbai" data-roles="Java Developer" data-cities="Mumbai">Java Mumbai</span>
+              <span class="chip" data-query="Software Developer jobs in Mumbai" data-roles="Software Developer" data-cities="Mumbai" data-exp="Fresher">Mumbai • Dev</span>
+              <span class="chip" data-query="React Frontend Developer Pune" data-roles="React Developer, Frontend Engineer" data-cities="Pune" data-exp="1-3 years">Pune • React</span>
+              <span class="chip" data-query="Python Backend Engineer Bangalore" data-roles="Python Developer, Backend Engineer" data-cities="Bangalore" data-exp="2 years">Bangalore • Python</span>
+              <span class="chip" data-query="Golang Cloud Engineer Remote" data-roles="Golang Developer, Cloud Engineer" data-cities="Remote" data-exp="3+ years">Remote • Golang</span>
+              <span class="chip" data-query="AI ML Engineer Mumbai" data-roles="AI Engineer, ML Engineer" data-cities="Mumbai" data-exp="Fresher">Mumbai • AI/ML</span>
+              <span class="chip" data-query="Java Spring Boot Developer Delhi" data-roles="Java Developer" data-cities="Delhi NCR" data-exp="Fresher">Delhi • Java</span>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="searchRoles">Target Roles (comma separated)</label>
-            <input class="form-input" style="padding-left: 14px;" id="searchRoles" type="text" value="Python Developer, AI ML Engineer">
+            <label class="form-label" for="searchRoles">Tech Stack & Roles (Any, comma-separated)</label>
+            <input class="form-input" style="padding-left: 14px;" id="searchRoles" type="text" value="Software Engineer" placeholder="e.g. Python, React, Golang, DevOps, Java">
           </div>
         </div>
 
         <div>
           <div class="form-group">
-            <label class="form-label" for="searchCities">Target Cities (comma separated)</label>
-            <input class="form-input" style="padding-left: 14px;" id="searchCities" type="text" value="Hyderabad, Pune, Bangalore, Mumbai">
+            <label class="form-label" for="searchCities">Locations / Cities (Any location worldwide)</label>
+            <input class="form-input" style="padding-left: 14px;" id="searchCities" type="text" value="Mumbai" placeholder="e.g. Mumbai, Pune, Remote, London, Dubai, New York">
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
             <div class="form-group">
-              <label class="form-label" for="maxResults">Max Results</label>
-              <input class="form-input" style="padding-left: 14px;" id="maxResults" type="number" value="20" min="10" max="100">
+              <label class="form-label" for="searchExp">Experience</label>
+              <input class="form-input" style="padding-left: 12px;" id="searchExp" type="text" value="Fresher" placeholder="e.g. 0-2 yrs, Senior, Any">
             </div>
             <div class="form-group">
-              <label class="form-label" for="pagesCount">Scraping Pages</label>
-              <input class="form-input" style="padding-left: 14px;" id="pagesCount" type="number" value="1" min="1" max="3">
+              <label class="form-label" for="maxResults">Max Results</label>
+              <input class="form-input" style="padding-left: 12px;" id="maxResults" type="number" value="20" min="1" max="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pagesCount">Pages Depth</label>
+              <input class="form-input" style="padding-left: 12px;" id="pagesCount" type="number" value="1" min="1" max="3">
             </div>
           </div>
         </div>
@@ -1068,12 +1074,15 @@
       }
     });
 
-    // Preset Chips
+    // Preset Chips (Dynamic Tech Stacks, Cities & Experience)
     document.querySelectorAll(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
-        document.getElementById("searchQuery").value = chip.dataset.query;
-        document.getElementById("searchRoles").value = chip.dataset.roles;
-        document.getElementById("searchCities").value = chip.dataset.cities;
+        document.getElementById("searchQuery").value = chip.dataset.query || "";
+        document.getElementById("searchRoles").value = chip.dataset.roles || "";
+        document.getElementById("searchCities").value = chip.dataset.cities || "";
+        if (chip.dataset.exp) {
+          document.getElementById("searchExp").value = chip.dataset.exp;
+        }
       });
     });
 
@@ -1093,6 +1102,7 @@
         query: document.getElementById("searchQuery").value.trim(),
         roles: splitList(document.getElementById("searchRoles").value),
         cities: splitList(document.getElementById("searchCities").value),
+        experience: document.getElementById("searchExp").value.trim() || "Any",
         include_naukri: document.getElementById("chkNaukri").checked,
         include_internshala: document.getElementById("chkInternshala").checked,
         naukri_pages: Number(document.getElementById("pagesCount").value) || 1,

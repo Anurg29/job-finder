@@ -1,3 +1,4 @@
+import re
 import time
 from typing import Any
 
@@ -19,6 +20,7 @@ def scrape_naukri(
     pages: int = 2,
     headless: bool = True,
     use_stealth: bool = True,
+    experience: int | str | None = None,
 ) -> list[dict[str, Any]]:
     options = Options()
     if headless:
@@ -43,6 +45,17 @@ def scrape_naukri(
 
     jobs: list[dict[str, Any]] = []
 
+    # Parse dynamic experience parameter
+    exp_param = ""
+    if experience is not None:
+        exp_str = str(experience).strip().lower()
+        if exp_str in ["fresher", "0", "entry"]:
+            exp_param = "&experience=0"
+        else:
+            numbers = re.findall(r"\d+", exp_str)
+            if numbers:
+                exp_param = f"&experience={numbers[0]}"
+
     try:
         role_slug = _slug(role)
         city_slug = _slug(location)
@@ -50,7 +63,7 @@ def scrape_naukri(
         for page in range(1, pages + 1):
             url = (
                 f"https://www.naukri.com/{role_slug}-jobs-in-{city_slug}"
-                f"?pageNo={page}&experience=0"
+                f"?pageNo={page}{exp_param}"
             )
             driver.get(url)
             time.sleep(3)
@@ -81,11 +94,11 @@ def scrape_naukri(
                             "title": title or "N/A",
                             "company": company or "N/A",
                             "location": location_text or location,
-                            "date_posted": "N/A",
+                            "date_posted": "Recent",
                             "job_url": link or "N/A",
                             "source": "naukri",
                             "description": "",
-                            "min_exp": "Fresher",
+                            "min_exp": str(experience or "Dynamic"),
                         }
                     )
                 except Exception:
