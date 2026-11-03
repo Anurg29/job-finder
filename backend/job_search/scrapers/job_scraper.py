@@ -5,19 +5,25 @@ from jobspy import scrape_jobs
 def _detect_country(location: str) -> str:
     """Detect country for JobSpy based on location query."""
     loc_lower = location.lower()
-    if any(k in loc_lower for k in ["usa", "united states", "new york", "san francisco", "california", "texas"]):
+    if any(k in loc_lower for k in ["usa", "united states", "new york", "san francisco", "california", "texas", "seattle", "austin", "boston", "chicago"]):
         return "USA"
-    if any(k in loc_lower for k in ["uk", "united kingdom", "london", "manchester"]):
+    if any(k in loc_lower for k in ["uk", "united kingdom", "london", "manchester", "birmingham", "edinburgh"]):
         return "UK"
-    if any(k in loc_lower for k in ["canada", "toronto", "vancouver"]):
+    if any(k in loc_lower for k in ["canada", "toronto", "vancouver", "montreal", "ottawa"]):
         return "Canada"
-    if any(k in loc_lower for k in ["australia", "sydney", "melbourne"]):
+    if any(k in loc_lower for k in ["australia", "sydney", "melbourne", "brisbane"]):
         return "Australia"
-    if any(k in loc_lower for k in ["germany", "berlin", "munich"]):
+    if any(k in loc_lower for k in ["germany", "berlin", "munich", "frankfurt", "hamburg"]):
         return "Germany"
+    if any(k in loc_lower for k in ["france", "paris", "lyon"]):
+        return "France"
+    if any(k in loc_lower for k in ["netherlands", "amsterdam", "rotterdam"]):
+        return "Netherlands"
+    if any(k in loc_lower for k in ["uae", "dubai", "abu dhabi"]):
+        return "UAE"
     if any(k in loc_lower for k in ["singapore"]):
         return "Singapore"
-    # Default to India
+    # Default to India for Indian cities or general searches
     return "India"
 
 
@@ -32,9 +38,15 @@ def fetch_jobs(
         site_names = ["indeed", "linkedin"]
 
     all_jobs: list[dict[str, Any]] = []
+    
+    # If no locations provided, default to remote search
+    target_locations = [loc for loc in locations if str(loc).strip()]
+    if not target_locations:
+        target_locations = ["Remote"]
 
-    for location in locations:
+    for location in target_locations:
         clean_location = location.strip()
+        is_remote_query = clean_location.lower() in ["remote", "wfh", "work from home", "anywhere"]
         country = _detect_country(clean_location)
 
         try:
@@ -42,7 +54,8 @@ def fetch_jobs(
             jobs = scrape_jobs(
                 site_name=site_names,
                 search_term=role,
-                location=clean_location,
+                location=None if is_remote_query else clean_location,
+                is_remote=is_remote_query,
                 results_wanted=results_wanted,
                 hours_old=hours_old,
                 country_indeed=country,
