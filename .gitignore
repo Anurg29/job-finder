@@ -7,14 +7,23 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
 
-# Local configuration & secrets
+# All Environment files
 .env
-backend/.env
-*.env.local
+.env*
+*.env
+*.env*
+.env.example
+backend/.env.example
 
-# Databases
+# Documentation & Non-code guide files
+docs/
+backend/DEPLOYMENT_GUIDE.md
+backend/DEPLOYMENT_READY.md
+backend/README.md
+
+# Databases & local storage
 *.db
 *.sqlite3
 
