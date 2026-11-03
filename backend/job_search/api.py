@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from job_search.ai_pipeline import pipeline, format_jobs_with_pipeline
+from job_search.ai_pipeline import pipeline
 from job_search.unified_scraper import search_all_portals
 from job_search.auth import (
     hash_password,
