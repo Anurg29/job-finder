@@ -3,13 +3,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from job_search.ai_pipeline import pipeline
+from job_search.mcp_server import mcp
 from job_search.unified_scraper import search_all_portals
 from job_search.auth import (
     hash_password,
@@ -82,6 +83,8 @@ app.add_middleware(
 )
 
 app.mount("/frontend", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+# Native FastMCP Server-Sent Events (SSE) mount for remote Claude / Cursor connection
+app.mount("/mcp", mcp.sse_app())
 
 
 @app.get("/")
@@ -102,6 +105,83 @@ def service_worker() -> FileResponse:
 @app.get("/api/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/mcp/info")
+def mcp_info(request: Request) -> dict[str, Any]:
+    """Provide real-time MCP configuration, paths, and tool schemas for Claude/Cursor setup."""
+    host = request.headers.get("host") or "127.0.0.1:8000"
+    scheme = "https" if request.url.scheme == "https" else "http"
+    base_url = f"{scheme}://{host}"
+    repo_root = str(PACKAGE_DIR.parent.parent)
+
+    tools_list = []
+    for t in mcp._tool_manager.list_tools():
+        tools_list.append({
+            "name": t.name,
+            "description": t.description.strip(),
+            "parameters": t.parameters,
+        })
+
+    return {
+        "status": "operational",
+        "server_name": mcp.name,
+        "repo_root": repo_root,
+        "sse_url": f"{base_url}/mcp/sse",
+        "tools": tools_list,
+        "configs": {
+            "claude_desktop_stdio": {
+                "mcpServers": {
+                    "job-finder": {
+                        "command": "uv",
+                        "args": [
+                            "--directory",
+                            repo_root,
+                            "run",
+                            "python",
+                            "-m",
+                            "job_search.mcp_server",
+                        ],
+                    }
+                }
+            },
+            "claude_desktop_sse": {
+                "mcpServers": {
+                    "job-finder": {
+                        "url": f"{base_url}/mcp/sse"
+                    }
+                }
+            },
+            "cursor_sse": {
+                "mcpServers": {
+                    "job-finder": {
+                        "url": f"{base_url}/mcp/sse"
+                    }
+                }
+            },
+            "cursor_stdio": {
+                "mcpServers": {
+                    "job-finder": {
+                        "command": "uv",
+                        "args": [
+                            "--directory",
+                            repo_root,
+                            "run",
+                            "python",
+                            "-m",
+                            "job_search.mcp_server",
+                        ],
+                    }
+                }
+            },
+        },
+        "config_paths": {
+            "mac": "~/Library/Application Support/Claude/claude_desktop_config.json",
+            "windows": "%APPDATA%\\Claude\\claude_desktop_config.json",
+            "linux": "~/.config/Claude/claude_desktop_config.json",
+            "cursor": ".cursor/mcp.json",
+        },
+    }
 
 
 @app.get("/api/ai/diagnostics")

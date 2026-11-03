@@ -433,6 +433,367 @@
       transform: translateY(-1px);
     }
 
+    /* FastMCP Integration Button & Live Badge */
+    .btn-mcp {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(16, 185, 129, 0.25));
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      color: #e2e8f0;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 180ms ease;
+    }
+    .btn-mcp:hover {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(16, 185, 129, 0.4));
+      border-color: #a78bfa;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+    }
+    .mcp-live-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Hero MCP Quick Banner */
+    .mcp-quick-banner {
+      margin-top: 16px;
+      background: linear-gradient(90deg, rgba(88, 28, 135, 0.25), rgba(16, 185, 129, 0.15));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+    .mcp-quick-banner:hover {
+      border-color: #a855f7;
+      background: linear-gradient(90deg, rgba(88, 28, 135, 0.35), rgba(16, 185, 129, 0.25));
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.3);
+    }
+    .mcp-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .mcp-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .mcp-banner-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .mcp-banner-text strong {
+      color: var(--text);
+    }
+    .mcp-banner-cta {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: all 160ms ease;
+    }
+    .mcp-quick-banner:hover .mcp-banner-cta {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0b0f19;
+    }
+
+    /* Modal Backdrop & Container */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 13, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+    .modal-backdrop.active {
+      display: flex;
+      opacity: 1;
+    }
+    .mcp-modal-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 760px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(168, 85, 247, 0.2);
+      padding: 28px;
+      animation: modalSlideUp 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(24px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title-wrap h2 {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.02em;
+    }
+    .modal-title-wrap p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .btn-close-modal {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 160ms ease;
+    }
+    .btn-close-modal:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    /* Modal Tabs */
+    .mcp-nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .mcp-tab-btn {
+      flex: 1;
+      padding: 9px 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 160ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .mcp-tab-btn.active {
+      background: var(--surface-elevated);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* OS Selector & Config Details */
+    .os-pill-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .os-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .os-pill.active {
+      background: rgba(168, 85, 247, 0.2);
+      border-color: #a855f7;
+      color: #e9d5ff;
+    }
+    .config-path-box {
+      background: rgba(11, 15, 25, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      word-break: break-all;
+    }
+    .code-container {
+      position: relative;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .code-container pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .btn-copy-code {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 160ms ease;
+    }
+    .btn-copy-code:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0b0f19;
+    }
+
+    /* Steps guide */
+    .steps-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    /* Tools & Prompt Cards */
+    .mcp-tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .tool-card-box {
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: all 160ms ease;
+    }
+    .tool-card-box:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(11, 15, 25, 0.85);
+    }
+    .tool-name-badge {
+      font-family: 'JetBrains Mono', monospace;
+      color: #a78bfa;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .tool-desc-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 4px 0 8px;
+    }
+    .tool-prompt-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .tool-prompt-pill:hover {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
     /* Hero Search Bar Header */
     .dashboard-hero {
       margin-bottom: 28px;
@@ -795,6 +1156,12 @@
       </div>
 
       <div class="nav-profile">
+        <button id="openMcpModalBtn" class="btn-mcp" onclick="openMcpModal()" title="Connect to Claude Desktop, Cursor or AI Agents">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Connect AI / MCP</span>
+          <span class="mcp-live-dot" title="FastMCP Server Active"></span>
+        </button>
+
         <button id="pwaInstallBtn" class="btn-pwa">
           <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
           Install App
@@ -817,6 +1184,22 @@
     <section class="dashboard-hero">
       <h1 id="welcomeGreeting">Welcome back!</h1>
       <p>Multi-portal search engine scouring LinkedIn, Indeed, Internshala, and Naukri with Groq AI synthesis.</p>
+
+      <!-- MCP Quick Callout Banner -->
+      <div class="mcp-quick-banner" onclick="openMcpModal()">
+        <div class="mcp-banner-left">
+          <span class="mcp-badge-pill">
+            <span class="mcp-live-dot"></span>
+            FastMCP Live
+          </span>
+          <span class="mcp-banner-text">
+            <strong>Use with Claude Desktop &amp; Cursor:</strong> Query our live multi-portal job scrapers directly inside your AI chat.
+          </span>
+        </div>
+        <button class="mcp-banner-cta">
+          Setup AI Agent &rarr;
+        </button>
+      </div>
     </section>
 
     <!-- Search Control Center -->
@@ -905,6 +1288,180 @@
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- =========================================
+       3. FAST-MCP SETUP MODAL (FOR CLAUDE & CURSOR)
+       ========================================= -->
+  <div id="mcpModal" class="modal-backdrop" onclick="if(event.target===this) closeMcpModal()">
+    <div class="mcp-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h2>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            FastMCP Agent Integration Hub
+          </h2>
+          <p>Equip Claude Desktop, Cursor, or external AI agents with our real-time multi-portal scraping tools.</p>
+        </div>
+        <button class="btn-close-modal" onclick="closeMcpModal()" title="Close">&times;</button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="mcp-nav-tabs">
+        <button class="mcp-tab-btn active" id="tabClaude" onclick="switchMcpTab('claude')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg>
+          Claude Desktop
+        </button>
+        <button class="mcp-tab-btn" id="tabCursor" onclick="switchMcpTab('cursor')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Cursor IDE
+        </button>
+        <button class="mcp-tab-btn" id="tabSse" onclick="switchMcpTab('sse')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+          Remote SSE
+        </button>
+        <button class="mcp-tab-btn" id="tabTools" onclick="switchMcpTab('tools')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          Exposed Tools (4)
+        </button>
+      </div>
+
+      <!-- Tab Content 1: Claude Desktop -->
+      <div id="mcpPaneClaude">
+        <div class="os-pill-group">
+          <button class="os-pill active" id="osMac" onclick="setClaudeOs('mac')">🍏 macOS</button>
+          <button class="os-pill" id="osWin" onclick="setClaudeOs('windows')">🪟 Windows</button>
+          <button class="os-pill" id="osLinux" onclick="setClaudeOs('linux')">🐧 Linux</button>
+        </div>
+
+        <div class="config-path-box">
+          <span id="claudeConfigPath">~/Library/Application Support/Claude/claude_desktop_config.json</span>
+          <button class="btn-copy-code" style="position: static;" onclick="copyText(document.getElementById('claudeConfigPath').textContent, this)">Copy Path</button>
+        </div>
+
+        <div class="code-container">
+          <button class="btn-copy-code" onclick="copyMcpCode('claudeCode', this)">Copy JSON Config</button>
+          <pre><code id="claudeCode">{
+  "mcpServers": {
+    "job-finder": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/job-finder",
+        "run",
+        "python",
+        "-m",
+        "job_search.mcp_server"
+      ]
+    }
+  }
+}</code></pre>
+        </div>
+
+        <div class="steps-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span>Click <strong>Copy JSON Config</strong> above.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span>Open your Claude configuration file (or go to <strong>Claude &gt; Settings &gt; Developer &gt; Edit Config</strong>).</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span>Paste the snippet into <code>"mcpServers"</code> and restart Claude Desktop. Look for the 🔨 hammer icon!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Cursor IDE -->
+      <div id="mcpPaneCursor" style="display: none;">
+        <div class="config-path-box">
+          <span>File: <code>.cursor/mcp.json</code> or <strong>Cursor Settings &gt; Features &gt; MCP</strong></span>
+          <button class="btn-copy-code" style="position: static;" onclick="copyText('.cursor/mcp.json', this)">Copy Path</button>
+        </div>
+
+        <div class="code-container">
+          <button class="btn-copy-code" onclick="copyMcpCode('cursorCode', this)">Copy Cursor Config</button>
+          <pre><code id="cursorCode">{
+  "mcpServers": {
+    "job-finder": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/job-finder",
+        "run",
+        "python",
+        "-m",
+        "job_search.mcp_server"
+      ]
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Remote SSE -->
+      <div id="mcpPaneSse" style="display: none;">
+        <div class="config-path-box">
+          <span id="sseEndpointText">http://127.0.0.1:8000/mcp/sse</span>
+          <button class="btn-copy-code" style="position: static;" onclick="copyText(document.getElementById('sseEndpointText').textContent, this)">Copy URL</button>
+        </div>
+
+        <div class="code-container">
+          <button class="btn-copy-code" onclick="copyMcpCode('sseCode', this)">Copy SSE Config</button>
+          <pre><code id="sseCode">{
+  "mcpServers": {
+    "job-finder": {
+      "url": "http://127.0.0.1:8000/mcp/sse"
+    }
+  }
+}</code></pre>
+        </div>
+        <p style="font-size: 12px; color: var(--text-dim);">Connect any remote or cloud MCP client without having Python installed locally.</p>
+      </div>
+
+      <!-- Tab Content 4: Available Tools -->
+      <div id="mcpPaneTools" style="display: none;">
+        <div class="mcp-tools-grid">
+          <div class="tool-card-box">
+            <div class="tool-name-badge">search_jobs(roles, locations, experience)</div>
+            <div class="tool-desc-text">Dynamic query across any tech profile and any location worldwide.</div>
+            <div class="tool-prompt-pill" onclick="copyText('Find React developer fresher jobs in Mumbai', this)">
+              <span>"Find React developer fresher jobs in Mumbai"</span>
+              <span style="font-size: 10px; opacity: 0.7;">Copy Prompt 📋</span>
+            </div>
+          </div>
+
+          <div class="tool-card-box">
+            <div class="tool-name-badge">search_jobs_custom(query)</div>
+            <div class="tool-desc-text">Natural language parser for freeform questions.</div>
+            <div class="tool-prompt-pill" onclick="copyText('Show me DevOps engineer remote jobs with 2 years experience', this)">
+              <span>"Show me DevOps engineer remote jobs with 2 years experience"</span>
+              <span style="font-size: 10px; opacity: 0.7;">Copy Prompt 📋</span>
+            </div>
+          </div>
+
+          <div class="tool-card-box">
+            <div class="tool-name-badge">search_all_jobs(roles, locations, experience)</div>
+            <div class="tool-desc-text">Multi-portal deep search across Indeed, LinkedIn, Naukri, and Internshala.</div>
+            <div class="tool-prompt-pill" onclick="copyText('Search all Python backend openings in London across all portals', this)">
+              <span>"Search all Python backend openings in London across all portals"</span>
+              <span style="font-size: 10px; opacity: 0.7;">Copy Prompt 📋</span>
+            </div>
+          </div>
+
+          <div class="tool-card-box">
+            <div class="tool-name-badge">search_fresher_jobs(roles, locations)</div>
+            <div class="tool-desc-text">Specialized scraper filter for entry-level and fresher positions.</div>
+            <div class="tool-prompt-pill" onclick="copyText('Find fresher Java developer jobs in Pune', this)">
+              <span>"Find fresher Java developer jobs in Pune"</span>
+              <span style="font-size: 10px; opacity: 0.7;">Copy Prompt 📋</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1235,7 +1792,107 @@
     });
 
     // ==========================================
-    // 6. INITIAL BOOT CHECK (7-DAY SESSION CHECK)
+    // 6. MCP INTEGRATION HUB CONTROLLER
+    // ==========================================
+    let mcpCachedInfo = null;
+
+    async function fetchMcpInfo() {
+      try {
+        const res = await fetch("/api/mcp/info");
+        if (!res.ok) return;
+        mcpCachedInfo = await res.json();
+        
+        // Populate Claude JSON
+        const stdioCfg = mcpCachedInfo.configs?.claude_desktop_stdio;
+        if (stdioCfg) {
+          document.getElementById("claudeCode").textContent = JSON.stringify(stdioCfg, null, 2);
+          document.getElementById("cursorCode").textContent = JSON.stringify(mcpCachedInfo.configs?.cursor_stdio || stdioCfg, null, 2);
+        }
+
+        // Populate SSE JSON
+        const sseCfg = mcpCachedInfo.configs?.claude_desktop_sse;
+        if (sseCfg) {
+          document.getElementById("sseCode").textContent = JSON.stringify(sseCfg, null, 2);
+        }
+        if (mcpCachedInfo.sse_url) {
+          document.getElementById("sseEndpointText").textContent = mcpCachedInfo.sse_url;
+        }
+      } catch (err) {
+        console.warn("[MCP] Failed to fetch server metadata:", err);
+      }
+    }
+
+    function openMcpModal() {
+      const modal = document.getElementById("mcpModal");
+      modal.classList.add("active");
+      fetchMcpInfo();
+
+      // Auto-detect client OS
+      const ua = navigator.userAgent.toLowerCase();
+      if (ua.includes("win")) {
+        setClaudeOs("windows");
+      } else if (ua.includes("linux")) {
+        setClaudeOs("linux");
+      } else {
+        setClaudeOs("mac");
+      }
+    }
+
+    function closeMcpModal() {
+      document.getElementById("mcpModal").classList.remove("active");
+    }
+
+    function switchMcpTab(tab) {
+      const tabs = ["claude", "cursor", "sse", "tools"];
+      tabs.forEach(t => {
+        const tabBtn = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const pane = document.getElementById(`mcpPane${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (tabBtn) tabBtn.classList.toggle("active", t === tab);
+        if (pane) pane.style.display = (t === tab) ? "block" : "none";
+      });
+    }
+
+    function setClaudeOs(os) {
+      document.getElementById("osMac").classList.toggle("active", os === "mac");
+      document.getElementById("osWin").classList.toggle("active", os === "windows");
+      document.getElementById("osLinux").classList.toggle("active", os === "linux");
+
+      const pathEl = document.getElementById("claudeConfigPath");
+      if (os === "windows") {
+        pathEl.textContent = "%APPDATA%\\Claude\\claude_desktop_config.json";
+      } else if (os === "linux") {
+        pathEl.textContent = "~/.config/Claude/claude_desktop_config.json";
+      } else {
+        pathEl.textContent = "~/Library/Application Support/Claude/claude_desktop_config.json";
+      }
+    }
+
+    function copyMcpCode(elementId, btnElement) {
+      const text = document.getElementById(elementId).textContent;
+      copyText(text, btnElement);
+    }
+
+    function copyText(text, btnElement) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Copied to clipboard! 📋", "success");
+        if (btnElement) {
+          const original = btnElement.innerHTML;
+          btnElement.innerHTML = "Copied! ✓";
+          btnElement.style.background = "var(--accent)";
+          btnElement.style.color = "#0b0f19";
+          setTimeout(() => {
+            btnElement.innerHTML = original;
+            btnElement.style.background = "";
+            btnElement.style.color = "";
+          }, 2000);
+        }
+      }).catch(() => {
+        showToast("Please copy manually.", "error");
+      });
+    }
+
+    // ==========================================
+    // 7. INITIAL BOOT CHECK (7-DAY SESSION CHECK)
     // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
       const activeUser = getValidSession();

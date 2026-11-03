@@ -110,12 +110,12 @@ def search_jobs_custom(query: str) -> str:
 
     # 2. Extract location dynamically via preposition patterns ('in Mumbai', 'at London', 'around Pune', 'near Berlin', etc.)
     loc_match = re.search(
-        r'\b(?:in|at|around|near|based in|located in)\s+([A-Za-z\s]+?)(?:\s+(?:with|for|as|posted|this|experience|fresher|senior|junior|lead|\d+\+?\s*(?:years?|yrs?))|$)',
+        r'\b(?:in|at|around|near|based in|located in)\s+([A-Za-z\s]+?)(?:\s+(?:with|for|as|posted|this|experience|fresher|senior|junior|lead|\d+\+?\s*(?:years?|yrs?))|[^\w\s]|$)',
         query,
         re.IGNORECASE,
     )
     if loc_match:
-        extracted_location = loc_match.group(1).strip()
+        extracted_location = re.sub(r'[^A-Za-z\s]', '', loc_match.group(1)).strip()
     elif is_remote:
         extracted_location = "Remote"
     else:

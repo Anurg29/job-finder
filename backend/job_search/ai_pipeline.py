@@ -39,13 +39,13 @@ def compact_jobs(jobs: list[dict[str, Any]], limit: int = 20) -> list[dict[str, 
     for job in jobs[:limit]:
         compact.append(
             {
-                "title": job.get("title", "N/A"),
-                "company": job.get("company", "N/A"),
-                "location": job.get("location", "N/A"),
-                "date_posted": str(job.get("date_posted", "N/A")),
+                "title": str(job.get("title") or "N/A"),
+                "company": str(job.get("company") or "N/A"),
+                "location": str(job.get("location") or "N/A"),
+                "date_posted": str(job.get("date_posted") or "N/A"),
                 "min_exp": str(job.get("min_exp") or "Fresher"),
-                "source": job.get("source", "portal"),
-                "job_url": job.get("job_url", "N/A"),
+                "source": str(job.get("source") or "portal"),
+                "job_url": str(job.get("job_url") or "N/A"),
             }
         )
     return compact
