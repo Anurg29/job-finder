@@ -1,0 +1,24 @@
+{
+  "name": "JobFinder AI - Smart Job Search & Career Hub",
+  "short_name": "JobFinder",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0f19",
+  "theme_color": "#10b981",
+  "description": "AI-powered job search engine scraping Indeed, LinkedIn, Naukri, and Internshala with Groq summaries.",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='38' fill='%2310b981'/><path d='M60 70h72v72H60z' fill='none' stroke='white' stroke-width='14' stroke-linejoin='round'/><path d='M80 70V54a16 16 0 0 1 32 0v16' fill='none' stroke='white' stroke-width='14'/><circle cx='96' cy='106' r='12' fill='white'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='102' fill='%2310b981'/><path d='M160 190h192v192H160z' fill='none' stroke='white' stroke-width='38' stroke-linejoin='round'/><path d='M215 190v-42a41 41 0 0 1 82 0v42' fill='none' stroke='white' stroke-width='38'/><circle cx='256' cy='286' r='32' fill='white'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

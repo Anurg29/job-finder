@@ -13,7 +13,17 @@ def test_health_check():
 def test_home_page():
     response = client.get("/")
     assert response.status_code == 200
-    assert "Job Search Studio" in response.text
+    assert "JobFinder" in response.text
+
+
+def test_pwa_manifest_and_sw():
+    res_manifest = client.get("/manifest.json")
+    assert res_manifest.status_code == 200
+    assert "JobFinder" in res_manifest.text
+
+    res_sw = client.get("/sw.js")
+    assert res_sw.status_code == 200
+    assert "CACHE_NAME" in res_sw.text
 
 
 def test_auth_registration_and_login_flow():

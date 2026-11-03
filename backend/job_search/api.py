@@ -85,6 +85,16 @@ def home() -> FileResponse:
     return FileResponse(str(FRONTEND_DIR / "index.html"), media_type="text/html")
 
 
+@app.get("/manifest.json")
+def manifest() -> FileResponse:
+    return FileResponse(str(FRONTEND_DIR / "manifest.json"), media_type="application/manifest+json")
+
+
+@app.get("/sw.js")
+def service_worker() -> FileResponse:
+    return FileResponse(str(FRONTEND_DIR / "sw.js"), media_type="application/javascript")
+
+
 @app.get("/api/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}

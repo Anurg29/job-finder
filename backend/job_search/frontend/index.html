@@ -1,456 +1,1240 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Search Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>JobFinder AI - Career Launchpad</title>
+  
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JobFinder">
+  <link rel="apple-touch-icon" href="/manifest.json">
+
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-1: #f6efe7;
-      --bg-2: #e8f0e7;
-      --paper: #fcfaf6;
-      --ink: #1f2a2e;
-      --muted: #55656b;
-      --line: #d4ddd7;
-      --accent: #0f7a5f;
-      --accent-2: #2f6ccf;
-      --warn: #c46a2f;
-      --shadow: 0 18px 38px rgba(31, 42, 46, 0.12);
-      --radius: 18px;
+      --bg: #0b0f19;
+      --surface: rgba(18, 24, 38, 0.75);
+      --surface-elevated: rgba(28, 36, 54, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #10b981;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --accent-hover: #059669;
+      --secondary: #3b82f6;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      margin: 0;
-      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 10% 15%, #fff4d8 0 20%, transparent 42%),
-        radial-gradient(circle at 90% 10%, #d8f5ef 0 22%, transparent 40%),
-        linear-gradient(130deg, var(--bg-1), var(--bg-2));
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    .wrap {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 32px 18px 54px;
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 25%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
     }
 
-    .hero {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 22px;
-      animation: rise 380ms ease-out both;
+    /* Views */
+    .view {
+      position: relative;
+      z-index: 1;
+      display: none;
+      opacity: 0;
+      transition: opacity 300ms ease, transform 300ms ease;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      width: fit-content;
-      background: #fff3;
-      border: 1px solid #fff8;
-      backdrop-filter: blur(5px);
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #2d5550;
-      font-weight: 700;
+    .view.active {
+      display: block;
+      opacity: 1;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(1.8rem, 4vw, 2.9rem);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
-      max-width: 740px;
-    }
-
-    .hero p {
-      margin: 0;
-      color: #304348;
-      max-width: 720px;
-    }
-
-    .panel {
-      background: color-mix(in oklab, var(--paper) 95%, white 5%);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      animation: rise 440ms ease-out both;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.25fr 1fr;
-      gap: 14px;
-    }
-
-    .field {
-      display: grid;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #33464b;
-      letter-spacing: 0.01em;
-    }
-
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      border: 1px solid #bdcbc3;
-      border-radius: 12px;
-      padding: 11px 12px;
-      font: inherit;
-      color: var(--ink);
-      background: #fff;
-      outline: none;
-      transition: border 140ms ease, box-shadow 140ms ease;
-    }
-
-    input:focus {
-      border-color: color-mix(in oklab, var(--accent), white 22%);
-      box-shadow: 0 0 0 4px #0f7a5f1f;
-    }
-
-    .toggles {
+    /* =========================================
+       1. AUTH VIEW STYLING
+       ========================================= */
+    #authView {
+      min-height: 100vh;
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin: 10px 0 14px;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
     }
 
-    .toggle {
-      display: inline-flex;
-      gap: 7px;
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      animation: cardAppear 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-brand {
+      display: flex;
       align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .auth-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #047857);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 22px;
+      box-shadow: 0 8px 16px var(--accent-glow);
+    }
+
+    .auth-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Tab Switcher */
+    .tab-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 180ms ease;
+    }
+
+    .tab-btn.active {
+      background: var(--surface-elevated);
+      color: var(--text);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
       font-size: 13px;
-      color: #2e4247;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 14px;
+      width: 18px;
+      height: 18px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px 12px 42px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: all 180ms ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-focus);
+      background: rgba(11, 15, 25, 0.9);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .session-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--accent);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 16px 0 20px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px var(--accent-glow);
+      transition: all 180ms ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px var(--accent-glow);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      opacity: 0;
+      transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.error {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: #3f1212;
+      color: #fca5a5;
+    }
+
+    .toast.success {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: #063726;
+      color: #86efac;
+    }
+
+    /* =========================================
+       2. MAIN APP DASHBOARD STYLING
+       ========================================= */
+    #appView {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Top Navigation Header */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding: 14px 20px;
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent), #047857);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+    }
+
+    .nav-title {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 6px 14px 6px 8px;
+      border-radius: 999px;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .user-name {
+      font-size: 13px;
       font-weight: 600;
     }
 
-    .btn {
-      background: linear-gradient(110deg, var(--accent), #1a8b6d);
-      color: #fff;
-      border: 0;
-      border-radius: 12px;
-      padding: 11px 16px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 20px #0f7a5f36;
-      transition: transform 120ms ease, opacity 120ms ease;
+    .session-badge-mini {
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 2px 6px;
+      border-radius: 6px;
     }
 
-    .btn:hover {
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 160ms ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .btn-pwa {
+      display: none;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      gap: 6px;
+      transition: transform 160ms ease;
+    }
+
+    .btn-pwa:hover {
       transform: translateY(-1px);
     }
 
-    .btn:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
+    /* Hero Search Bar Header */
+    .dashboard-hero {
+      margin-bottom: 28px;
     }
 
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
+    .dashboard-hero h1 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
     }
 
-    .status {
-      min-height: 20px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent-2);
-      margin: 10px 0 0;
-    }
-
-    .summary {
-      white-space: pre-wrap;
-      font-size: 14px;
-      color: #1d3035;
-      line-height: 1.45;
-      max-height: 320px;
-      overflow: auto;
-      border-radius: 12px;
-      border: 1px dashed #c9d5cc;
-      padding: 12px;
-      background: #fff;
-    }
-
-    .results {
-      margin-top: 18px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .result-card {
-      display: grid;
-      gap: 6px;
-      padding: 12px 13px;
-      border: 1px solid #d0dbd3;
-      border-radius: 12px;
-      background: #fff;
-      animation: rise 220ms ease-out both;
-    }
-
-    .result-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
-    .result-title {
-      margin: 0;
+    .dashboard-hero p {
+      color: var(--text-muted);
+      margin-top: 6px;
       font-size: 15px;
-      line-height: 1.35;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 4px 9px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #264d42;
-      background: #dff3ec;
-      border: 1px solid #bfe4d8;
-      text-transform: capitalize;
-      white-space: nowrap;
+    /* Control Panel Box */
+    .glass-panel {
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
     }
 
-    .row {
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    /* Quick Preset Chips */
+    .preset-chips {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      font-size: 13px;
-      color: #45595f;
+      margin-top: 8px;
     }
 
-    a.link {
-      color: var(--accent-2);
+    .chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 140ms ease;
+    }
+
+    .chip:hover {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--accent);
+    }
+
+    /* Checkbox & Portal Switches */
+    .portals-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+    }
+
+    .portal-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .portal-toggle input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* AI Summary Box */
+    .summary-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(59, 130, 246, 0.04));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      display: none;
+    }
+
+    .summary-card.active {
+      display: block;
+      animation: fadeIn 300ms ease;
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .summary-body {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #cbd5e1;
+      white-space: pre-line;
+    }
+
+    /* Job Results Grid */
+    .results-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .results-head h2 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .job-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 200ms ease;
+      position: relative;
+    }
+
+    .job-card:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .job-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .job-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .source-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .source-badge.indeed { background: #003a9b2b; color: #60a5fa; border: 1px solid #3b82f644; }
+    .source-badge.linkedin { background: #0a66c226; color: #38bdf8; border: 1px solid #0284c744; }
+    .source-badge.naukri { background: #4f46e526; color: #818cf8; border: 1px solid #6366f144; }
+    .source-badge.internshala { background: #0284c726; color: #38bdf8; border: 1px solid #0ea5e944; }
+
+    .job-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-apply {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
       text-decoration: none;
       font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 160ms ease;
+    }
+
+    .btn-apply:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
       font-weight: 700;
     }
 
-    a.link:hover {
-      text-decoration: underline;
+    /* Skeleton Loading State */
+    .loading-pulse {
+      animation: pulse 1.5s infinite ease-in-out;
     }
 
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.2; }
     }
 
-    @media (max-width: 860px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-      .wrap {
-        padding: 20px 14px 34px;
-      }
-      .panel {
-        padding: 14px;
-      }
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 48px 16px;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <span class="eyebrow">Standalone Mode</span>
-      <h1>Job Search Studio</h1>
-      <p>Search fresher roles across JobSpy sources, Naukri, and Internshala without depending on Claude.</p>
-    </section>
+  <div class="ambient-glow"></div>
 
-    <section class="panel">
-      <div class="grid">
+  <!-- Toast Notification System -->
+  <div id="toast" class="toast"></div>
+
+  <!-- =========================================
+       1. AUTH VIEW (Login & Register with 7-Day Session)
+       ========================================= -->
+  <div id="authView" class="view active">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-icon">💼</div>
         <div>
-          <div class="field">
-            <label for="query">Query</label>
-            <input id="query" type="text" value="Python fresher jobs in Hyderabad, Pune, Mumbai, Bangalore">
-          </div>
-          <div class="field">
-            <label for="roles">Roles (comma separated)</label>
-            <input id="roles" type="text" value="Python Developer, AI ML Engineer">
-          </div>
-          <div class="field">
-            <label for="cities">Cities (comma separated)</label>
-            <input id="cities" type="text" value="Hyderabad, Pune, Mumbai, Bangalore">
+          <h2 class="auth-title">JobFinder AI</h2>
+          <p class="auth-subtitle">AI-powered multi-portal career engine</p>
+        </div>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="tab-switch">
+        <button id="tabLogin" class="tab-btn active">Sign In</button>
+        <button id="tabRegister" class="tab-btn">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginMobile">Mobile Number</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <input class="form-input" id="loginMobile" type="tel" placeholder="e.g. 9876543210" required>
           </div>
         </div>
 
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <input class="form-input" id="loginPassword" type="password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div class="session-badge">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Auto-authenticated for <strong>7 days</strong> with session security</span>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn-primary">
+          <span>Sign In & Open Dashboard</span>
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" style="display: none;">
+        <div class="form-group">
+          <label class="form-label" for="regFullName">Full Name</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <input class="form-input" id="regFullName" type="text" placeholder="e.g. Anurag Rokade" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regMobile">Mobile Number</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <input class="form-input" id="regMobile" type="tel" placeholder="10-digit mobile number" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regDob">Date of Birth</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <input class="form-input" id="regDob" type="date" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password</label>
+          <div class="input-wrap">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <input class="form-input" id="regPassword" type="password" placeholder="At least 6 characters" required>
+          </div>
+        </div>
+
+        <div class="session-badge">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          <span>Passwords hashed with salted bcrypt (cost factor 12)</span>
+        </div>
+
+        <button type="submit" id="regSubmitBtn" class="btn-primary">
+          <span>Create Account & Start</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================
+       2. MAIN APP DASHBOARD VIEW
+       ========================================= -->
+  <div id="appView" class="view">
+    <!-- Top Nav Header -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="nav-logo-icon">JF</div>
         <div>
-          <div class="field">
-            <label for="maxResults">Max Results</label>
-            <input id="maxResults" type="number" value="120" min="10" max="500">
-          </div>
-          <div class="field">
-            <label for="naukriPages">Naukri Pages</label>
-            <input id="naukriPages" type="number" value="1" min="1" max="5">
-          </div>
-          <div class="field">
-            <label for="internshalaPages">Internshala Pages</label>
-            <input id="internshalaPages" type="number" value="1" min="1" max="5">
+          <div class="nav-title">JobFinder AI</div>
+          <div style="font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 4px;">
+            <span style="width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block;"></span>
+            Live Engine Ready
           </div>
         </div>
       </div>
 
-      <div class="toggles">
-        <label class="toggle"><input id="includeNaukri" type="checkbox"> Include Naukri</label>
-        <label class="toggle"><input id="includeInternshala" type="checkbox"> Include Internshala</label>
+      <div class="nav-profile">
+        <button id="pwaInstallBtn" class="btn-pwa">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Install App
+        </button>
+
+        <div class="user-pill">
+          <div id="userAvatar" class="avatar">AR</div>
+          <span id="userName" class="user-name">User</span>
+          <span class="session-badge-mini">7-Day Pass</span>
+        </div>
+
+        <button id="logoutBtn" class="btn-logout" title="Sign Out">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Exit
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Hero -->
+    <section class="dashboard-hero">
+      <h1 id="welcomeGreeting">Welcome back!</h1>
+      <p>Multi-portal search engine scouring LinkedIn, Indeed, Internshala, and Naukri with Groq AI synthesis.</p>
+    </section>
+
+    <!-- Search Control Center -->
+    <section class="glass-panel">
+      <div class="panel-grid">
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="searchQuery">Search Query</label>
+            <div class="input-wrap">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input class="form-input" id="searchQuery" type="text" value="Python fresher jobs in Hyderabad">
+            </div>
+            <!-- Quick Chips -->
+            <div class="preset-chips">
+              <span class="chip" data-query="Python fresher jobs in Hyderabad" data-roles="Python Developer" data-cities="Hyderabad">Python Hyderabad</span>
+              <span class="chip" data-query="AI ML Engineer fresher Pune" data-roles="AI ML Engineer, Data Scientist" data-cities="Pune">AI / ML Pune</span>
+              <span class="chip" data-query="React Frontend Developer Bangalore" data-roles="Frontend Developer, React Developer" data-cities="Bangalore">React Bangalore</span>
+              <span class="chip" data-query="Java Developer fresher Mumbai" data-roles="Java Developer" data-cities="Mumbai">Java Mumbai</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="searchRoles">Target Roles (comma separated)</label>
+            <input class="form-input" style="padding-left: 14px;" id="searchRoles" type="text" value="Python Developer, AI ML Engineer">
+          </div>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <label class="form-label" for="searchCities">Target Cities (comma separated)</label>
+            <input class="form-input" style="padding-left: 14px;" id="searchCities" type="text" value="Hyderabad, Pune, Bangalore, Mumbai">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="maxResults">Max Results</label>
+              <input class="form-input" style="padding-left: 14px;" id="maxResults" type="number" value="20" min="10" max="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pagesCount">Scraping Pages</label>
+              <input class="form-input" style="padding-left: 14px;" id="pagesCount" type="number" value="1" min="1" max="3">
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button id="searchBtn" class="btn">Search Jobs</button>
-      <p class="status" id="status"></p>
-      <p class="muted">Tip: disable Naukri for faster runs if Chrome automation is blocked.</p>
+      <!-- Portal Toggles -->
+      <div style="border-top: 1px solid var(--border); padding-top: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div class="portals-wrap">
+          <label class="portal-toggle"><input type="checkbox" id="chkJobSpy" checked> Indeed & LinkedIn</label>
+          <label class="portal-toggle"><input type="checkbox" id="chkInternshala" checked> Internshala</label>
+          <label class="portal-toggle"><input type="checkbox" id="chkNaukri"> Naukri (Selenium)</label>
+        </div>
+
+        <button id="searchBtn" class="btn-primary" style="width: auto; min-width: 220px;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span>Find Opportunities</span>
+        </button>
+      </div>
     </section>
 
-    <section class="panel" style="margin-top: 16px;">
-      <h2 style="margin: 0 0 10px; font-size: 1.1rem;">Summary</h2>
-      <div id="summary" class="summary">Run a search to see formatted output.</div>
+    <!-- AI Insights Summary Card -->
+    <section id="summaryCard" class="summary-card">
+      <div class="summary-header">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        <span>Groq AI Intelligence Brief</span>
+      </div>
+      <div id="summaryBody" class="summary-body"></div>
     </section>
 
-    <section class="panel" style="margin-top: 16px;">
-      <h2 id="resultsTitle" style="margin: 0 0 10px; font-size: 1.1rem;">Results</h2>
-      <div id="results" class="results"></div>
+    <!-- Job Results Section -->
+    <section>
+      <div class="results-head">
+        <h2>Live Opportunities <span id="resultsCount" style="color: var(--text-muted); font-size: 14px; font-weight: normal;"></span></h2>
+      </div>
+
+      <div id="jobsGrid" class="jobs-grid">
+        <div class="empty-state">
+          Configure your preferences and click "Find Opportunities" to scrape live job listings.
+        </div>
+      </div>
     </section>
   </div>
 
   <script>
-    const el = {
-      query: document.getElementById("query"),
-      roles: document.getElementById("roles"),
-      cities: document.getElementById("cities"),
-      maxResults: document.getElementById("maxResults"),
-      naukriPages: document.getElementById("naukriPages"),
-      internshalaPages: document.getElementById("internshalaPages"),
-      includeNaukri: document.getElementById("includeNaukri"),
-      includeInternshala: document.getElementById("includeInternshala"),
-      status: document.getElementById("status"),
-      summary: document.getElementById("summary"),
-      resultsTitle: document.getElementById("resultsTitle"),
-      results: document.getElementById("results"),
-      searchBtn: document.getElementById("searchBtn")
-    };
+    // ==========================================
+    // 1. 7-DAY SESSION ARCHITECTURE
+    // ==========================================
+    const SESSION_KEY = "jobfinder_auth_session";
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-    const splitCsv = (value) =>
-      value
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
+    function saveSession(userData) {
+      const sessionPayload = {
+        user: userData,
+        expires_at: Date.now() + SEVEN_DAYS_MS
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(sessionPayload));
+    }
 
-    function renderResults(items) {
-      el.results.innerHTML = "";
-      if (!items.length) {
-        const empty = document.createElement("p");
-        empty.className = "muted";
-        empty.textContent = "No jobs found for this run.";
-        el.results.appendChild(empty);
-        return;
-      }
-
-      for (const job of items) {
-        const card = document.createElement("article");
-        card.className = "result-card";
-
-        const head = document.createElement("div");
-        head.className = "result-head";
-
-        const title = document.createElement("h3");
-        title.className = "result-title";
-        title.textContent = job.title || "N/A";
-
-        const badge = document.createElement("span");
-        badge.className = "badge";
-        badge.textContent = job.source || "unknown";
-
-        head.appendChild(title);
-        head.appendChild(badge);
-
-        const meta = document.createElement("div");
-        meta.className = "row";
-        meta.textContent = `${job.company || "N/A"} | ${job.location || "N/A"} | Posted: ${job.date_posted || "N/A"}`;
-
-        const link = document.createElement("a");
-        link.className = "link";
-        link.target = "_blank";
-        link.rel = "noreferrer";
-        link.textContent = "Open Job Link";
-        link.href = job.job_url || "#";
-
-        card.appendChild(head);
-        card.appendChild(meta);
-        card.appendChild(link);
-        el.results.appendChild(card);
+    function getValidSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !parsed.expires_at || Date.now() > parsed.expires_at) {
+          localStorage.removeItem(SESSION_KEY);
+          return null;
+        }
+        return parsed.user;
+      } catch (e) {
+        localStorage.removeItem(SESSION_KEY);
+        return null;
       }
     }
 
-    async function search() {
+    function clearSession() {
+      localStorage.removeItem(SESSION_KEY);
+      showAuth();
+    }
+
+    // ==========================================
+    // 2. VIEW CONTROLLER & NAVIGATION
+    // ==========================================
+    const authView = document.getElementById("authView");
+    const appView = document.getElementById("appView");
+    const toast = document.getElementById("toast");
+
+    function showToast(msg, type = "normal") {
+      toast.textContent = msg;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => { toast.className = "toast"; }, 3500);
+    }
+
+    function showAuth() {
+      appView.classList.remove("active");
+      authView.classList.add("active");
+    }
+
+    function showApp(user) {
+      authView.classList.remove("active");
+      appView.classList.add("active");
+
+      // Update User Profile In Navbar
+      const initials = (user.full_name || "User")
+        .split(" ")
+        .map(n => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+
+      document.getElementById("userAvatar").textContent = initials;
+      document.getElementById("userName").textContent = user.full_name || user.mobile_no;
+      document.getElementById("welcomeGreeting").textContent = `Welcome back, ${user.full_name || "Innovator"}! 👋`;
+    }
+
+    // Tab Toggle: Login vs Register
+    const tabLogin = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+
+    tabLogin.addEventListener("click", () => {
+      tabLogin.classList.add("active");
+      tabRegister.classList.remove("active");
+      loginForm.style.display = "block";
+      registerForm.style.display = "none";
+    });
+
+    tabRegister.addEventListener("click", () => {
+      tabRegister.classList.add("active");
+      tabLogin.classList.remove("active");
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      clearSession();
+      showToast("Signed out successfully", "normal");
+    });
+
+    // ==========================================
+    // 3. AUTHENTICATION HANDLERS
+    // ==========================================
+    // Register
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("regSubmitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating Account...";
+
       const payload = {
-        query: el.query.value.trim(),
-        roles: splitCsv(el.roles.value),
-        cities: splitCsv(el.cities.value),
-        include_naukri: el.includeNaukri.checked,
-        include_internshala: el.includeInternshala.checked,
-        naukri_pages: Number(el.naukriPages.value) || 1,
-        internshala_pages: Number(el.internshalaPages.value) || 1,
-        max_results: Number(el.maxResults.value) || 120
+        full_name: document.getElementById("regFullName").value.trim(),
+        mobile_no: document.getElementById("regMobile").value.trim(),
+        dob: document.getElementById("regDob").value.trim(),
+        password: document.getElementById("regPassword").value
       };
 
-      el.searchBtn.disabled = true;
-      el.status.textContent = "Searching sources. This can take some time.";
-      el.summary.textContent = "Working...";
-      el.results.innerHTML = "";
-      el.resultsTitle.textContent = "Results";
-
       try {
-        const apiUrl = window.location.origin.startsWith("http") ? "/api/search" : "http://127.0.0.1:8002/api/search";
-        const response = await fetch(apiUrl, {
+        const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
-        const text = await response.text();
-        console.log("Response status:", response.status);
-        console.log("Response text:", text);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Registration failed");
 
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${text}`);
+        saveSession(data.user);
+        showToast("Account created! 7-day session active.", "success");
+        showApp(data.user);
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Account & Start";
+      }
+    });
+
+    // Login
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("loginSubmitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Verifying...";
+
+      const payload = {
+        mobile_no: document.getElementById("loginMobile").value.trim(),
+        password: document.getElementById("loginPassword").value
+      };
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Invalid mobile or password");
+
+        saveSession(data.user);
+        showToast("Welcome back! 7-day session active.", "success");
+        showApp(data.user);
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign In & Open Dashboard";
+      }
+    });
+
+    // Preset Chips
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.getElementById("searchQuery").value = chip.dataset.query;
+        document.getElementById("searchRoles").value = chip.dataset.roles;
+        document.getElementById("searchCities").value = chip.dataset.cities;
+      });
+    });
+
+    // ==========================================
+    // 4. SEARCH & JOB ENGINE
+    // ==========================================
+    const searchBtn = document.getElementById("searchBtn");
+    const summaryCard = document.getElementById("summaryCard");
+    const summaryBody = document.getElementById("summaryBody");
+    const jobsGrid = document.getElementById("jobsGrid");
+    const resultsCount = document.getElementById("resultsCount");
+
+    searchBtn.addEventListener("click", async () => {
+      const splitList = val => val.split(",").map(s => s.trim()).filter(Boolean);
+
+      const payload = {
+        query: document.getElementById("searchQuery").value.trim(),
+        roles: splitList(document.getElementById("searchRoles").value),
+        cities: splitList(document.getElementById("searchCities").value),
+        include_naukri: document.getElementById("chkNaukri").checked,
+        include_internshala: document.getElementById("chkInternshala").checked,
+        naukri_pages: Number(document.getElementById("pagesCount").value) || 1,
+        internshala_pages: Number(document.getElementById("pagesCount").value) || 1,
+        max_results: Number(document.getElementById("maxResults").value) || 20
+      };
+
+      searchBtn.disabled = true;
+      searchBtn.innerHTML = `<span>Scraping Portals...</span>`;
+      jobsGrid.innerHTML = `
+        <div class="empty-state loading-pulse">
+          <p style="font-size: 16px; color: var(--accent); font-weight: 600;">Scraping LinkedIn, Indeed, and selected sources...</p>
+          <p style="margin-top: 6px;">Synthesizing results with Groq AI model...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "Search request failed");
+
+        // Display AI Summary
+        if (data.summary) {
+          summaryCard.classList.add("active");
+          summaryBody.textContent = data.summary;
+        } else {
+          summaryCard.classList.remove("active");
         }
 
-        const data = JSON.parse(text);
-        el.status.textContent = `Done. ${data.total_jobs} jobs returned.`;
-        el.summary.textContent = data.summary || "No summary available.";
-        el.resultsTitle.textContent = `Results (${data.total_jobs})`;
-        renderResults(data.jobs || []);
-      } catch (error) {
-        el.status.textContent = `Error: ${error.message}`;
-        el.summary.textContent = "Search failed. Check server logs and try again.";
+        // Render Job Cards
+        resultsCount.textContent = `(${data.total_jobs || 0} jobs found)`;
+        renderJobCards(data.jobs || []);
+      } catch (err) {
+        showToast(err.message, "error");
+        jobsGrid.innerHTML = `<div class="empty-state" style="color: var(--danger);">Search error: ${err.message}</div>`;
       } finally {
-        el.searchBtn.disabled = false;
+        searchBtn.disabled = false;
+        searchBtn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Find Opportunities</span>`;
       }
+    });
+
+    function renderJobCards(jobs) {
+      jobsGrid.innerHTML = "";
+      if (!jobs.length) {
+        jobsGrid.innerHTML = `<div class="empty-state">No matching positions found. Try broadening your keywords.</div>`;
+        return;
+      }
+
+      jobs.forEach(job => {
+        const card = document.createElement("article");
+        card.className = "job-card";
+
+        const src = (job.source || "jobspy").toLowerCase();
+        let badgeClass = src.includes("indeed") ? "indeed" :
+                         src.includes("linkedin") ? "linkedin" :
+                         src.includes("naukri") ? "naukri" :
+                         src.includes("internshala") ? "internshala" : "";
+
+        card.innerHTML = `
+          <div>
+            <div class="job-top">
+              <h3 class="job-title">${escapeHtml(job.title || "Position Available")}</h3>
+              <span class="source-badge ${badgeClass}">${escapeHtml(job.source || "Portal")}</span>
+            </div>
+            <div class="job-meta">
+              <div class="meta-row">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <strong>${escapeHtml(job.company || "N/A")}</strong>
+              </div>
+              <div class="meta-row">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>${escapeHtml(job.location || "India")}</span>
+              </div>
+              <div class="meta-row" style="color: var(--text-dim);">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Posted: ${escapeHtml(job.date_posted || "Recent")}</span>
+              </div>
+            </div>
+          </div>
+          <a class="btn-apply" href="${escapeHtml(job.job_url || "#")}" target="_blank" rel="noreferrer">
+            <span>Apply on ${escapeHtml(job.source || "Portal")}</span>
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        `;
+        jobsGrid.appendChild(card);
+      });
     }
 
-    el.searchBtn.addEventListener("click", search);
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m]);
+    }
+
+    // ==========================================
+    // 5. PWA SERVICE WORKER & INSTALL BANNER
+    // ==========================================
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").then(() => {
+          console.log("[PWA] Service Worker registered");
+        }).catch(err => {
+          console.warn("[PWA] Service Worker failed:", err);
+        });
+      });
+    }
+
+    let deferredPrompt;
+    const pwaInstallBtn = document.getElementById("pwaInstallBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      pwaInstallBtn.style.display = "flex";
+    });
+
+    pwaInstallBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        pwaInstallBtn.style.display = "none";
+      }
+      deferredPrompt = null;
+    });
+
+    // ==========================================
+    // 6. INITIAL BOOT CHECK (7-DAY SESSION CHECK)
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+      const activeUser = getValidSession();
+      if (activeUser) {
+        showApp(activeUser);
+      } else {
+        showAuth();
+      }
+    });
   </script>
 </body>
 </html>
