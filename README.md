@@ -4,7 +4,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.121%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![FastMCP](https://img.shields.io/badge/Model%20Context%20Protocol-MCP%201.27-purple.svg)](https://modelcontextprotocol.io/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Glassmorphic%20UI-f59e0b.svg)](#-frontend--pwa-client)
-[![Tests Passing](https://img.shields.io/badge/Tests-15%2F15%20Passing-brightgreen.svg)](#-automated-testing)
+[![Tests Passing](https://img.shields.io/badge/Tests-28%2F28%20Passing-brightgreen.svg)](#-automated-testing)
 
 An enterprise-grade, autonomous job intelligence platform and Model Context Protocol (MCP) server. Scrapes, aggregates, deduplicates, and synthesizes job listings across **Indeed**, **LinkedIn**, **Naukri**, and **Internshala** with a zero-downtime cascading AI summarization engine (Google Gemini → Groq Cloud → Local Deterministic Engine).
 
@@ -218,6 +218,19 @@ curl http://127.0.0.1:8000/api/ai/diagnostics
 
 ---
 
+## 🖥️ Visual Showcase Client (Frontend PWA)
+
+The frontend located in [`backend/job_search/frontend/`](file:///Users/anuragdineshrokade/Documents/job/backend/job_search/frontend/) is a **Visual Demonstration Client** created specifically to highlight and showcase the primary role of the backend:
+
+- **Primary Role of the Backend**: The core engine is an autonomous backend service exposing the **FastMCP Protocol** (for Claude Desktop & Cursor), **Multi-Portal Scraping** (Indeed, LinkedIn, Naukri, Internshala), and a **3-Tier Cascading AI Engine** (Gemini 2.0 Flash → Groq → Local).
+- **Purpose of the Frontend**: Acts as an interactive visual showcase and playground where developers and recruiters can:
+  1. Visualize real-time scraping results and deduplication live.
+  2. Inspect AI-generated markdown briefs and salary/skill clusters.
+  3. Click **"Connect AI / MCP"** to access the 1-click config generator for Claude Desktop and Cursor.
+  4. Capture showcase screenshots / photos for portfolio and LinkedIn demonstrations.
+
+---
+
 ## 🧪 Automated Testing
 
 The project includes unit, integration, and security tests:
@@ -232,8 +245,9 @@ tests/test_api.py ................ [PASSED]
 tests/test_auth.py ............... [PASSED]
 tests/test_groq_formatter.py ..... [PASSED]
 tests/test_mcp_server.py ......... [PASSED]
+tests/test_worst_and_good_cases.py [PASSED]
 
-======================== 15 passed in 7.11s ========================
+======================== 28 passed in 7.26s ========================
 ```
 
 ---

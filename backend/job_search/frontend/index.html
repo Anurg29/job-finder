@@ -308,9 +308,128 @@
        2. MAIN APP DASHBOARD STYLING
        ========================================= */
     #appView {
-      max-width: 1140px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 24px 20px 80px;
+      padding: 28px 40px 90px;
+      width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      #appView {
+        padding: 20px 20px 80px;
+      }
+    }
+
+    /* Showcase Client Banner */
+    .showcase-banner {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.15), rgba(16, 185, 129, 0.12));
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 14px;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .showcase-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .showcase-tag {
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      color: #e9d5ff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .showcase-text {
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .showcase-text strong {
+      color: #fff;
+    }
+
+    .showcase-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .showcase-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    /* Hero Metrics Grid */
+    .hero-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 22px 0 28px;
+    }
+
+    .metric-card {
+      background: rgba(18, 24, 38, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 180ms ease;
+    }
+
+    .metric-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+      background: rgba(18, 24, 38, 0.85);
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .metric-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .metric-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .metric-lbl {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
 
     /* Top Navigation Header */
@@ -929,26 +1048,27 @@
 
     .jobs-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
     }
 
     .job-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 200ms ease;
+      transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
     }
 
     .job-card:hover {
-      border-color: rgba(16, 185, 129, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 185, 129, 0.2);
+    }
     }
 
     .job-top {
@@ -1180,10 +1300,63 @@
       </div>
     </header>
 
+    <!-- Architecture Showcase Client Notice -->
+    <div class="showcase-banner">
+      <div class="showcase-left">
+        <span class="showcase-tag">
+          <span class="mcp-live-dot"></span>
+          VISUAL SHOWCASE CLIENT
+        </span>
+        <span class="showcase-text">
+          Demonstration UI highlighting the <strong>JobFinder FastMCP Protocol Engine</strong>, <strong>Multi-Portal Web Scrapers</strong> (Indeed, LinkedIn, Naukri, Internshala), and <strong>Cascading AI Pipeline</strong>.
+        </span>
+      </div>
+      <div class="showcase-chips">
+        <span class="showcase-chip">⚡ FastMCP Server Live</span>
+        <span class="showcase-chip">🧠 Gemini 2.0 + Groq</span>
+        <span class="showcase-chip">🛡️ 28/28 Pytest Verified</span>
+      </div>
+    </div>
+
     <!-- Dashboard Hero -->
     <section class="dashboard-hero">
       <h1 id="welcomeGreeting">Welcome back!</h1>
       <p>Multi-portal search engine scouring LinkedIn, Indeed, Internshala, and Naukri with Groq AI synthesis.</p>
+
+      <!-- Architecture Capability Cards (Photo-Ready) -->
+      <div class="hero-metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon-wrap" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">🌐</div>
+          <div>
+            <div class="metric-val">4 Portals Live</div>
+            <div class="metric-lbl">LinkedIn • Indeed • Naukri • Internshala</div>
+          </div>
+        </div>
+
+        <div class="metric-card" onclick="openMcpModal()" style="cursor: pointer;">
+          <div class="metric-icon-wrap" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">⚡</div>
+          <div>
+            <div class="metric-val">FastMCP Ready</div>
+            <div class="metric-lbl">Claude Desktop &amp; Cursor AI Tools</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🧠</div>
+          <div>
+            <div class="metric-val">Zero-Downtime AI</div>
+            <div class="metric-lbl">Gemini 2.0 Flash &rarr; Groq &rarr; Local</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">🛡️</div>
+          <div>
+            <div class="metric-val">100% Resilient</div>
+            <div class="metric-lbl">28/28 Automated Pytest Suite</div>
+          </div>
+        </div>
+      </div>
 
       <!-- MCP Quick Callout Banner -->
       <div class="mcp-quick-banner" onclick="openMcpModal()">
